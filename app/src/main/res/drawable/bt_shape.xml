@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_pressed="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+
+            android:shape="rectangle">      //shape用于定义形状
+            <solid android:color="#ffea66" />
+            <corners
+                android:topLeftRadius="15dip"
+                android:topRightRadius="15dip"
+                android:bottomLeftRadius="15dip"
+                android:bottomRightRadius="15dip"
+                android:radius="5dip" />
+
+        </shape>
+    </item>
+    <item android:state_pressed="false">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+
+            android:shape="rectangle">      //shape用于定义形状
+            <solid android:color="#d06800" />
+            <corners
+                android:topLeftRadius="15dip"
+                android:topRightRadius="15dip"
+                android:bottomLeftRadius="15dip"
+                android:bottomRightRadius="15dip"
+                android:radius="5dip" />
+
+        </shape>
+    </item>
+</selector>

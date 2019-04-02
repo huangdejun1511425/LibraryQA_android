@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="#330033"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="560dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="100dp"
+                        android:gravity="center">
+
+                        <Button
+                            android:id="@+id/button1"
+                            android:layout_width="160dp"
+                            android:layout_height="100dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/bt2_shape"
+                            android:text="开馆时间"
+                            android:textColor="@android:color/background_light"
+                            android:textSize="24sp" />
+
+                        <Button
+                            android:id="@+id/button2"
+                            android:layout_width="160dp"
+                            android:layout_height="100dp"
+                            android:layout_below="@+id/button1"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="50dp"
+                            android:background="@drawable/bt2_shape"
+                            android:text="办证须知"
+                            android:textColor="@android:color/background_light"
+                            android:textSize="24sp" />
+
+                        <Button
+                            android:id="@+id/button3"
+                            android:layout_width="160dp"
+                            android:layout_height="100dp"
+                            android:layout_below="@+id/button2"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="50dp"
+                            android:background="@drawable/bt2_shape"
+                            android:text="入馆须知"
+                            android:textColor="@android:color/background_light"
+                            android:textSize="24sp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="94dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:src="@drawable/logo"
+                        app:srcCompat="@drawable/logo" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="100dp"
+                        android:gravity="center">
+
+                        <Button
+                            android:id="@+id/button4"
+                            android:layout_width="160dp"
+                            android:layout_height="100dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/bt2_shape"
+                            android:text="借阅须知"
+                            android:textColor="@android:color/background_light"
+                            android:textSize="24sp" />
+
+                        <Button
+                            android:id="@+id/button5"
+                            android:layout_width="160dp"
+                            android:layout_height="100dp"
+                            android:layout_below="@+id/button4"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="50dp"
+                            android:background="@drawable/bt2_shape"
+                            android:text="每日课堂"
+                            android:textColor="@android:color/background_light"
+                            android:textSize="24sp" />
+
+                        <Button
+                            android:id="@+id/button6"
+                            android:layout_width="160dp"
+                            android:layout_height="100dp"
+                            android:layout_below="@+id/button5"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="50dp"
+                            android:background="@drawable/bt2_shape"
+                            android:text="常见问题"
+                            android:textColor="@android:color/background_light"
+                            android:textSize="24sp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="840dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bt_shape"
+                android:text="按下说话"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@android:color/background_light"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
