@@ -101,8 +101,8 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:paddingLeft="10dp"
-                        android:textColor="@android:color/background_light"
-                        android:textSize="24sp" />
+                        android:textColor="#000"
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/btn_chat"
@@ -112,7 +112,7 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/bt_shape"
                         android:onClick="startVoice"
-                        android:text="按下说话"
+                        android:text="点击说话"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@android:color/background_light"
                         android:textSize="24sp" />
@@ -133,8 +133,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="10">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -154,7 +153,7 @@
                             android:background="@drawable/bt_top_shape"
                             android:text="开馆时间"
                             android:textColor="@android:color/background_light"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -170,7 +169,7 @@
                             android:background="@drawable/bt2_center_shape"
                             android:text="办证须知"
                             android:textColor="@android:color/background_light"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -186,7 +185,7 @@
                             android:background="@drawable/bt2_center_shape"
                             android:text="入馆须知"
                             android:textColor="@android:color/background_light"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -201,7 +200,7 @@
                             android:background="@drawable/bt2_center_shape"
                             android:text="借阅须知"
                             android:textColor="@android:color/background_light"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -217,7 +216,7 @@
                             android:background="@drawable/bt2_center_shape"
                             android:text="每日课堂"
                             android:textColor="@android:color/background_light"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -232,7 +231,7 @@
                             android:background="@drawable/bt_bottom_shape"
                             android:text="常见问题"
                             android:textColor="@android:color/background_light"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -242,7 +241,7 @@
                         <ImageView
                             android:id="@+id/iv_logo2"
                             android:layout_width="match_parent"
-                            android:layout_height="260dp"
+                            android:layout_height="200dp"
                             android:visibility="visible"
                             android:src="@drawable/logo1"
                             app:srcCompat="@drawable/logo1" />

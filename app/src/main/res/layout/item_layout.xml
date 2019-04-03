@@ -39,7 +39,7 @@
             android:paddingRight="10dp"
             android:text="answer"
             android:textSize="20sp"
-            android:textColor="#fff"/>
+            android:textColor="#000"/>
         <TextView
             android:id="@+id/tv_search1"
             android:layout_width="wrap_content"
@@ -100,10 +100,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
+            android:gravity="left"
             android:text="question"
-            android:textColor="#fff"
+            android:textColor="#000"
             android:textSize="20sp" />
     </LinearLayout>
 </RelativeLayout>

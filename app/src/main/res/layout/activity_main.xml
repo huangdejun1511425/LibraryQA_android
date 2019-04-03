@@ -82,7 +82,7 @@
                     android:layout_weight="1.5">
 
                     <ImageView
-                        android:id="@+id/imageView2"
+                        android:id="@+id/iv_logo1"
                         android:layout_width="94dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -152,7 +152,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bt_shape"
-                android:text="按下说话"
+                android:text="点击说话"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@android:color/background_light"
                 android:textSize="30sp" />

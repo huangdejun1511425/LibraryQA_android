@@ -22,10 +22,10 @@
             android:shape="rectangle">      //shape用于定义形状
             <solid android:color="#d06800" />
             <corners
-                android:topLeftRadius="15dip"
-                android:topRightRadius="15dip"
-                android:bottomLeftRadius="15dip"
-                android:bottomRightRadius="15dip"
+                android:topLeftRadius="12dip"
+                android:topRightRadius="12dip"
+                android:bottomLeftRadius="12dip"
+                android:bottomRightRadius="12dip"
                 android:radius="5dip" />
 
         </shape>

@@ -6,7 +6,7 @@
     <!--android:endColor="#ffe533"-->
     <!--android:angle="270"-->
     <!--/>-->
-    <solid android:color="#797979"/>
+    <solid android:color="#ffffff"/>
     <!--  <stroke android:width="1dip"
      android:color="@color/blue"
      />  -->

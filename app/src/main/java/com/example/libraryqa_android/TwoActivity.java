@@ -1,13 +1,18 @@
 package com.example.libraryqa_android;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -48,12 +53,14 @@ public class TwoActivity extends Activity {
     private String greet;
     private List<Info.SearchAsw> searchAnswers;
     private static Handler handler = new Handler();
-    private SpannableString searchAsk1, searchAsk2, searchAsk3;
+    private SpannableString searchAsk1, searchAsk2, searchAsk3;     //检索出的前三条问题
+    private CountTimer countTimerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.two_activity);
+        //全屏设置
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if(NavUtils.getParentActivityName(TwoActivity.this)!=null) {
@@ -65,11 +72,9 @@ public class TwoActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 finish();
             }
         });
-
         initVoice();
         initView();
     }
@@ -84,15 +89,75 @@ public class TwoActivity extends Activity {
         tvAsk = (TextView) findViewById(R.id.ll_tv_ask);
         tvGreet = (TextView) findViewById(R.id.ll_tv_greet);
         mAdapter = new TwoActivity.MyAdapter();
-
-        //mLv_chat.setAdapter(mAdapter);
+        countTimerView = new CountTimer(120000,1000,
+                TwoActivity.this);
         mLv_chat.setAdapter(mAdapter);
         //设置问候语
-        //greet = getRandomWelcomeTips();
         greet = new String("您好，有什么问题能为您服务");
         tvGreet.setText(greet);
-        isGreet = true;
+        LvBean aswBean = new LvBean("点击说话，有惊喜哦！", 1, -1);
+        dataList.add(aswBean);
     }
+
+    //**********************无操作一段时间后返回主页面***********************//
+    private void timeStart(){
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                countTimerView.start();
+            }
+        });
+    }
+
+    //主要的方法，重写dispatchTouchEvent
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()){
+            //获取触摸动作，如果ACTION_UP，计时开始。
+            case MotionEvent.ACTION_UP:
+                countTimerView.start();
+                break;
+            //否则其他动作计时取消
+            default:countTimerView.cancel();
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        countTimerView.cancel();
+    }
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        timeStart();
+    }
+
+    public class CountTimer extends CountDownTimer {
+        private Context context;
+
+        /**
+         * 参数 millisInFuture       倒计时总时间（如60S，120s等）
+         * 参数 countDownInterval    渐变时间（每次倒计1s）
+         */
+        public CountTimer(long millisInFuture, long countDownInterval,Context context) {
+            super(millisInFuture, countDownInterval);
+            this.context=context;
+        }
+        // 计时完毕时触发
+        @Override
+        public void onFinish() {
+            finish();
+
+        }
+        // 计时过程显示
+        @Override
+        public void onTick(long millisUntilFinished) {
+        }
+    }
+    //******************************************************************//
 
     //用户第一次进入，随机获取欢迎语
     private String getRandomWelcomeTips() {
@@ -183,7 +248,7 @@ public class TwoActivity extends Activity {
     }
 
 
-    private void readAsw(String text) {
+    public void readAsw(String text) {
         //1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
         SpeechSynthesizer mTts = SpeechSynthesizer.createSynthesizer(this, null);
         //2.合成参数设置，详见《科大讯飞MSC API手册(Android)》SpeechSynthesizer 类
@@ -277,19 +342,21 @@ public class TwoActivity extends Activity {
                 vh.tv_search2.setVisibility(View.GONE);
                 vh.tv_search3.setVisibility(View.GONE);
                 searchAsk1 = new SpannableString(bean.text);
-                searchAsk1.setSpan(new ClickableSpan() {
+                searchAsk1.setSpan(new NoLineClickSpan() {
                     @Override
                     public void onClick(View view) {
-                        LvBean aswBean  = new LvBean(searchAnswers.get(0).getQuestion(), -1, -1);
-                        LvBean askBean = new LvBean(searchAnswers.get(0).getAnswer(), 1, -1);
+                        LvBean askBean  = new LvBean(searchAnswers.get(0).getQuestion(), -1, -1);
+                        LvBean aswBean = new LvBean(searchAnswers.get(0).getAnswer(), 1, -1);
                         dataList.clear();
-                        dataList.add(aswBean);
                         dataList.add(askBean);
+                        dataList.add(aswBean);
                         mAdapter.notifyDataSetChanged();
                         mLv_chat.setSelection(dataList.size() - 1);
                         mLv_chat.setAdapter(mAdapter);
                     }
-                }, 0, bean.text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, 0, bean.text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#0000FF"));
+                searchAsk1.setSpan(foregroundColorSpan, 0, bean.text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 vh.tv_search1.setText(searchAsk1);
                 vh.tv_search1.setMovementMethod(LinkMovementMethod.getInstance());
             }
@@ -302,7 +369,7 @@ public class TwoActivity extends Activity {
                 vh.tv_search2.setVisibility(View.VISIBLE);
                 vh.tv_search3.setVisibility(View.GONE);
                 searchAsk2 = new SpannableString(bean.text);
-                searchAsk2.setSpan(new ClickableSpan() {
+                searchAsk2.setSpan(new NoLineClickSpan() {
                     @Override
                     public void onClick(View view) {
                         LvBean aswBean  = new LvBean(searchAnswers.get(1).getQuestion(), -1, -1);
@@ -315,6 +382,8 @@ public class TwoActivity extends Activity {
                         mLv_chat.setAdapter(mAdapter);
                     }
                 }, 0, bean.text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#0000FF"));
+                searchAsk2.setSpan(foregroundColorSpan, 0, bean.text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 vh.tv_search2.setText(searchAsk2);
                 vh.tv_search2.setMovementMethod(LinkMovementMethod.getInstance());
             }
@@ -327,7 +396,7 @@ public class TwoActivity extends Activity {
                 vh.tv_search2.setVisibility(View.GONE);
                 vh.tv_search3.setVisibility(View.VISIBLE);
                 searchAsk3 = new SpannableString(bean.text);
-                searchAsk3.setSpan(new ClickableSpan() {
+                searchAsk3.setSpan(new NoLineClickSpan() {
                     @Override
                     public void onClick(View view) {
                         LvBean aswBean  = new LvBean(searchAnswers.get(2).getQuestion(), -1, -1);
@@ -340,8 +409,11 @@ public class TwoActivity extends Activity {
                         mLv_chat.setAdapter(mAdapter);
                     }
                 }, 0, bean.text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#0000FF"));
+                searchAsk3.setSpan(foregroundColorSpan, 0, bean.text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 vh.tv_search3.setText(searchAsk3);
                 vh.tv_search3.setMovementMethod(LinkMovementMethod.getInstance());
+
             }
             return convertView;
         }
