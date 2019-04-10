@@ -22,19 +22,39 @@
             <!--android:textSize="20sp" />-->
     <!--</LinearLayout>-->
     <LinearLayout
+        android:id="@+id/ll_ask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/tv_ask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="200dp"
+            android:paddingRight="200dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="question"
+            android:textColor="#000"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/ll_asw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_ask"
         android:orientation="vertical"
         android:layout_marginTop="10dp"
         android:layout_centerVertical="true">
 
         <TextView
             android:id="@+id/tv_asw"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
+            android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="answer"
@@ -42,10 +62,10 @@
             android:textColor="#000"/>
         <TextView
             android:id="@+id/tv_search1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
+            android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="search1"
@@ -55,10 +75,10 @@
             android:textColor="#000"/>
         <TextView
             android:id="@+id/tv_search2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
+            android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginTop="5dp"
@@ -69,10 +89,10 @@
             android:textColor="#000"/>
         <TextView
             android:id="@+id/tv_search3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
+            android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginTop="5dp"
@@ -87,25 +107,5 @@
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:src="@drawable/p3"/>-->
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/ll_ask"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ll_asw"
-        android:orientation="vertical"
-        android:layout_centerVertical="true">
-        <TextView
-            android:id="@+id/tv_ask"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="left"
-            android:text="question"
-            android:textColor="#000"
-            android:textSize="20sp" />
     </LinearLayout>
 </RelativeLayout>
