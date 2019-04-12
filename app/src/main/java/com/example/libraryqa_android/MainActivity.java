@@ -3,6 +3,8 @@ package com.example.libraryqa_android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -46,8 +48,9 @@ public class MainActivity extends Activity {
     private ListView mLv_chat;
     private ArrayList<LvBean> dataList = new ArrayList<>();
     private MainActivity.MyAdapter mAdapter;
-    private ImageView imageView;
+    private ImageView mImageView;
     private TextView tvAsk;
+    private TextView swTextview;
     String kgAsk;
     boolean isVoice = false;
     private TextView tvGreet;
@@ -60,6 +63,7 @@ public class MainActivity extends Activity {
     private SpannableString searchAsk1, searchAsk2, searchAsk3;     //检索出的前三条问题
     private CountTimer countTimerView;
     private GifImageView gifImageView;
+    private Bitmap logo;            //二维码中间logo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,15 +99,21 @@ public class MainActivity extends Activity {
         gifImageView.setImageResource(R.drawable.picture1);
         mLv_chat = (ListView) findViewById(R.id.lv_chat);
         tvAsk = (TextView) findViewById(R.id.tv_ask1);
-        tvGreet = (TextView) findViewById(R.id.ll_tv_ask);
+        swTextview = (TextView) findViewById(R.id.sw_tv);
+        //tvGreet = (TextView) findViewById(R.id.ll_tv_ask);
         mAdapter = new MainActivity.MyAdapter();
         countTimerView = new CountTimer(60000,1000,
                 MainActivity.this);
         mLv_chat.setAdapter(mAdapter);
         //设置问候语
         String greet = "您好，有什么能为您服务？";
-        tvGreet.setText(greet);
+        LvBean greetBean = new LvBean(greet, -1, -1);
+        dataList.add(greetBean);
+        mAdapter.notifyDataSetChanged();
+        mLv_chat.setSelection(dataList.size() - 1);
         readAsw(greet);
+        logo= BitmapFactory.decodeResource(super.getResources(),R.drawable.lib_logo);
+        mImageView = (ImageView) findViewById(R.id.imageView);
     }
 
     //**********************无操作一段时间后显示屏保***********************//
@@ -179,8 +189,7 @@ public class MainActivity extends Activity {
         //2.设置听写参数
         iatDialog.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         iatDialog.setParameter(SpeechConstant.ACCENT, "mandarin");
-        dataList.clear();
-        tvGreet.setVisibility(View.GONE);
+        //tvGreet.setVisibility(View.GONE);
         //把解析返回的文本拼接起来
         final StringBuilder sb = new StringBuilder();
         //3.设置回调接口
@@ -208,6 +217,7 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
                     }
+                    dataList.clear();
                     String asw = info.getGraph_answer();
                     if(asw.length() == 0){
                         //知识库未检索到结果，返回信息检索答案
@@ -238,6 +248,9 @@ public class MainActivity extends Activity {
                     mLv_chat.setSelection(dataList.size() - 1);
                     //合成出回答语音
                     gifImageView.setImageResource(R.drawable.picture3);
+                    Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(kgAsk + "\n" + asw, 230, "UTF-8", "H", "0", Color.RED, Color.WHITE, null, logo, 0.2F);
+                    mImageView.setImageBitmap(mBitmap);
+                    swTextview.setVisibility(View.VISIBLE);
                     readAsw(asw);
 
                 }
