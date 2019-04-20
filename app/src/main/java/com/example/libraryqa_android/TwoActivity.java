@@ -2,6 +2,9 @@ package com.example.libraryqa_android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -37,45 +39,56 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class TwoActivity extends Activity {
 
-    private Button btn9;
-    private ListView mLv_chat;
     private ArrayList<LvBean> dataList = new ArrayList<>();
-    private TwoActivity.MyAdapter mAdapter;
-    private ImageView iv_logo2;
-    private TextView tvAsk;
-    private TextView tvGreet;
     private HttpPost httpPost;
     private Info info = new Info();
-    private String[] welcome_array;
-    private boolean isGreet;
-    private String greet;
-    private List<Info.SearchAsw> searchAnswers;
     private static Handler handler = new Handler();
-    private SpannableString searchAsk1, searchAsk2, searchAsk3;     //检索出的前三条问题
+    //显示回答列表
+    private ListView mLv_chat;
+    //存储回答列表
+    private TwoActivity.MyAdapter mAdapter;
+    //显示二维码
+    private ImageView mImageView;
+    //显示用户问题
+    private TextView tvAsk;
+    //显示二维码"扫一扫"
+    private TextView swTextview;
+    //用户问题字符串
+    private String kgAsk;
+    //判断是否有动作
+    private boolean isTouch = true;
+    //存储post返回的search_answer
+    private List<Info.SearchAsw> searchAnswers;
+    //post返回的search_answer中前三条问题
+    private SpannableString searchAsk1, searchAsk2, searchAsk3;
+    //计时
     private CountTimer countTimerView;
+    //显示gif动画
+    private GifImageView gifImageView;
+    //二维码中间logo
+    private Bitmap logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.two_activity);
-        //全屏设置
+        //设置全屏显示
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE;
+        getWindow().setAttributes(params);
+        //固定横屏显示
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if(NavUtils.getParentActivityName(TwoActivity.this)!=null) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        //返回上一页
-        iv_logo2 = (ImageView) findViewById(R.id.iv_logo2);
-        iv_logo2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        setContentView(R.layout.two_activity);
+        //创建讯飞语音实例
         initVoice();
+        //获取需要的view
         initView();
     }
 
@@ -85,90 +98,37 @@ public class TwoActivity extends Activity {
     }
 
     private void initView() {
+        //获取gifImageView
+        gifImageView = (GifImageView) findViewById(R.id.gifImageView);
+        //设置gif动画
+        gifImageView.setImageResource(R.drawable.picture1);
+        //获取lv_chat
         mLv_chat = (ListView) findViewById(R.id.lv_chat);
-        tvAsk = (TextView) findViewById(R.id.ll_tv_ask);
-        tvGreet = (TextView) findViewById(R.id.ll_tv_greet);
+        //获取tv_ask1
+        tvAsk = (TextView) findViewById(R.id.tv_ask1);
+        //获取sw_tv
+        swTextview = (TextView) findViewById(R.id.sw_tv);
+        mImageView = (ImageView) findViewById(R.id.imageView);
+        //获取二维码logo
+        logo= BitmapFactory.decodeResource(super.getResources(),R.drawable.lib_logo);
         mAdapter = new TwoActivity.MyAdapter();
-        countTimerView = new CountTimer(120000,1000,
+        //设置计时器为一分钟
+        countTimerView = new CountTimer(60000,1000,
                 TwoActivity.this);
+        //刷新mLv_chat
         mLv_chat.setAdapter(mAdapter);
         //设置问候语
-        greet = new String("您好，有什么问题能为您服务");
-        tvGreet.setText(greet);
-        LvBean aswBean = new LvBean("点击说话，有惊喜哦！", 1, -1);
-        dataList.add(aswBean);
+        String greet = "您好，有什么能为您服务？";
+        LvBean greetBean = new LvBean(greet, -1, -1);
+        //问候语加入会话列表
+        dataList.add(greetBean);
+        //刷新lv
+        mAdapter.notifyDataSetChanged();
+        //lv滚动到最后
+        mLv_chat.setSelection(dataList.size() - 1);
+        //语音问候
+        readAsw(greet);
     }
-
-    //**********************无操作一段时间后返回主页面***********************//
-    private void timeStart(){
-        new Handler(getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                countTimerView.start();
-            }
-        });
-    }
-
-    //主要的方法，重写dispatchTouchEvent
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()){
-            //获取触摸动作，如果ACTION_UP，计时开始。
-            case MotionEvent.ACTION_UP:
-                countTimerView.start();
-                break;
-            //否则其他动作计时取消
-            default:countTimerView.cancel();
-                break;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        countTimerView.cancel();
-    }
-    @Override
-    protected void onResume() {
-
-        super.onResume();
-        timeStart();
-    }
-
-    public class CountTimer extends CountDownTimer {
-        private Context context;
-
-        /**
-         * 参数 millisInFuture       倒计时总时间（如60S，120s等）
-         * 参数 countDownInterval    渐变时间（每次倒计1s）
-         */
-        public CountTimer(long millisInFuture, long countDownInterval,Context context) {
-            super(millisInFuture, countDownInterval);
-            this.context=context;
-        }
-        // 计时完毕时触发
-        @Override
-        public void onFinish() {
-            finish();
-
-        }
-        // 计时过程显示
-        @Override
-        public void onTick(long millisUntilFinished) {
-        }
-    }
-    //******************************************************************//
-
-    //用户第一次进入，随机获取欢迎语
-    private String getRandomWelcomeTips() {
-        String welcome_tip = null;
-        welcome_array = this.getResources()
-                .getStringArray(R.array.welcome_tips);
-        int index = (int) (Math.random() * (welcome_array.length - 1));
-        welcome_tip = welcome_array[index];
-        return welcome_tip;
-    }
-
 
     public void startVoice(View view) {
         //1.创建SpeechRecognizer对象，第二个参数：本地听写时传InitListener
@@ -176,11 +136,6 @@ public class TwoActivity extends Activity {
         //2.设置听写参数
         iatDialog.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         iatDialog.setParameter(SpeechConstant.ACCENT, "mandarin");
-        if(isGreet) {
-            //iatDialog.show();
-            isGreet = false;
-        }
-        dataList.clear();
         //把解析返回的文本拼接起来
         final StringBuilder sb = new StringBuilder();
         //3.设置回调接口
@@ -189,27 +144,30 @@ public class TwoActivity extends Activity {
             public void onResult(RecognizerResult recognizerResult, boolean isLast) {
                 //使用gson处理语音识别结果并返回字符串
                 String voiceStr = parseData(recognizerResult.getResultString());
-                sb.append(voiceStr); //在录音完成时拼接\
-                if (isLast) {
-//                    LvBean greetBean = new LvBean(greet, 0, -1);
-//                    dataList.add(greetBean);
-                    String kgAsk = sb.toString();
-                    System.out.println("111111"+kgAsk);
-                    //LvBean askBean = new LvBean(kgAsk, 1, -1);
+                //在录音完成时拼接
+                sb.append(voiceStr);
+                if(isLast) {
+                    kgAsk = sb.toString();
+                    //显示用户问题
+                    tvAsk.setVisibility(View.VISIBLE);
                     tvAsk.setText(kgAsk);
                     httpPost = new HttpPost();
+                    //向服务器发送post请求
                     httpPost.hPost(kgAsk, info);
-                    while(info.getGraph_answer() == null) {
+                    //等待服务器返回结果
+                    while (info.getGraph_answer() == null) {
                         try {
                             Thread.currentThread().sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
+                    dataList.clear();
+                    //获取服务器返回的graph_answer
                     String asw = info.getGraph_answer();
                     if(asw.length() == 0){
-                        //知识库未检索到结果，返回信息检索答案
-                        asw += "您的问题小图不知道，看看下面的是否感兴趣：\n";
+                        //graph_answer为空，返回search_answer
+                        asw += "您说的小图不太明白，您是想问以下问题吗？";
                         searchAnswers = info.getSearch_answer();
                         int id = -1;
                         LvBean aswBean = new LvBean(asw, -1, id);
@@ -235,7 +193,12 @@ public class TwoActivity extends Activity {
                     //lv滚动到最后
                     mLv_chat.setSelection(dataList.size() - 1);
                     //合成出回答语音
+                    gifImageView.setImageResource(R.drawable.picture3);
+                    Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(kgAsk + "\n" + asw, 230, "UTF-8", "H", "0", Color.RED, Color.WHITE, null, logo, 0.2F);
+                    mImageView.setImageBitmap(mBitmap);
+                    swTextview.setVisibility(View.VISIBLE);
                     readAsw(asw);
+
                 }
             }
 
@@ -246,7 +209,6 @@ public class TwoActivity extends Activity {
         //4.开始听写
         iatDialog.show();
     }
-
 
     public void readAsw(String text) {
         //1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
@@ -295,29 +257,25 @@ public class TwoActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TwoActivity.ViewHolder vh;
+            ViewHolder vh;
             if (convertView == null) {
                 convertView = View.inflate(TwoActivity.this, R.layout.item_layout, null);
-                vh = new TwoActivity.ViewHolder();
+                vh = new ViewHolder();
                 vh.tv_ask = (TextView) convertView.findViewById(R.id.tv_ask);
                 vh.ll_asw = (LinearLayout) convertView.findViewById(R.id.ll_asw);
                 vh.tv_asw = (TextView) convertView.findViewById(R.id.tv_asw);
-                //vh.ll_greet = (LinearLayout) convertView.findViewById(R.id.ll_greet);
-                //vh.tv_greet = (TextView) convertView.findViewById(R.id.tv_greet);
                 vh.ll_ask = (LinearLayout) convertView.findViewById(R.id.ll_ask);
                 vh.tv_search1 = (TextView) convertView.findViewById(R.id.tv_search1);
                 vh.tv_search2 = (TextView) convertView.findViewById(R.id.tv_search2);
                 vh.tv_search3 = (TextView) convertView.findViewById(R.id.tv_search3);
-                //vh.iv_asw = (ImageView) convertView.findViewById(R.id.iv_asw);
                 convertView.setTag(vh);
             } else {
-                vh = (TwoActivity.ViewHolder) convertView.getTag();
+                vh = (ViewHolder) convertView.getTag();
             }
             LvBean bean = dataList.get(position);
             if (bean.isAsk == 1) {
                 vh.ll_ask.setVisibility(View.VISIBLE);
                 vh.ll_asw.setVisibility(View.GONE);
-                //vh.ll_greet.setVisibility(View.GONE);
                 vh.tv_ask.setText(bean.text);
             }
             if(bean.isAsk == 0){
@@ -328,26 +286,28 @@ public class TwoActivity extends Activity {
             }
             if(bean.isAsk == -1){
                 vh.ll_asw.setVisibility(View.VISIBLE);
-                //vh.ll_greet.setVisibility(View.GONE);
                 vh.ll_ask.setVisibility(View.GONE);
                 vh.tv_asw.setText(bean.text);
-                //vh.iv_asw.setImageResource(bean.imgId);
             }
             if(bean.isAsk == 2) {
                 vh.ll_asw.setVisibility(View.VISIBLE);
-                //vh.ll_greet.setVisibility(View.GONE);
                 vh.ll_ask.setVisibility(View.GONE);
                 vh.tv_asw.setVisibility(View.GONE);
                 vh.tv_search1.setVisibility(View.VISIBLE);
                 vh.tv_search2.setVisibility(View.GONE);
                 vh.tv_search3.setVisibility(View.GONE);
+                //search_answer添加点击事件，可点击查看答案
                 searchAsk1 = new SpannableString(bean.text);
                 searchAsk1.setSpan(new NoLineClickSpan() {
                     @Override
                     public void onClick(View view) {
                         LvBean askBean  = new LvBean(searchAnswers.get(0).getQuestion(), -1, -1);
                         LvBean aswBean = new LvBean(searchAnswers.get(0).getAnswer(), 1, -1);
-                        dataList.clear();
+                        //dataList.clear();
+                        if(dataList.size() > 4){
+                            dataList.remove(dataList.size() - 1);
+                            dataList.remove(dataList.size() - 1);
+                        }
                         dataList.add(askBean);
                         dataList.add(aswBean);
                         mAdapter.notifyDataSetChanged();
@@ -355,6 +315,7 @@ public class TwoActivity extends Activity {
                         mLv_chat.setAdapter(mAdapter);
                     }
                 }, 0, bean.text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                //设置问题字体颜色
                 ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#0000FF"));
                 searchAsk1.setSpan(foregroundColorSpan, 0, bean.text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 vh.tv_search1.setText(searchAsk1);
@@ -374,7 +335,11 @@ public class TwoActivity extends Activity {
                     public void onClick(View view) {
                         LvBean aswBean  = new LvBean(searchAnswers.get(1).getQuestion(), -1, -1);
                         LvBean askBean = new LvBean(searchAnswers.get(1).getAnswer(), 1, -1);
-                        dataList.clear();
+                        //dataList.clear();
+                        if(dataList.size() > 4){
+                            dataList.remove(dataList.size() - 1);
+                            dataList.remove(dataList.size() - 1);
+                        }
                         dataList.add(aswBean);
                         dataList.add(askBean);
                         mAdapter.notifyDataSetChanged();
@@ -401,7 +366,11 @@ public class TwoActivity extends Activity {
                     public void onClick(View view) {
                         LvBean aswBean  = new LvBean(searchAnswers.get(2).getQuestion(), -1, -1);
                         LvBean askBean = new LvBean(searchAnswers.get(2).getAnswer(), 1, -1);
-                        dataList.clear();
+                        //dataList.clear();
+                        if(dataList.size() > 4){
+                            dataList.remove(dataList.size() - 1);
+                            dataList.remove(dataList.size() - 1);
+                        }
                         dataList.add(aswBean);
                         dataList.add(askBean);
                         mAdapter.notifyDataSetChanged();
@@ -419,16 +388,69 @@ public class TwoActivity extends Activity {
         }
     }
 
-    static class ViewHolder {
-        TextView tv_ask;
-        LinearLayout ll_asw;
-        TextView tv_asw;
-        TextView tv_greet;
-        LinearLayout ll_greet;
-        LinearLayout ll_ask;
-        TextView tv_search1;
-        TextView tv_search2;
-        TextView tv_search3;
-        //ImageView iv_asw;
+    //**********************无操作一段时间后显示屏保***********************//
+    private void timeStart(){
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                countTimerView.start();
+
+            }
+        });
+    }
+
+    //主要的方法，重写dispatchTouchEvent
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()){
+            //获取触摸动作，如果ACTION_UP，计时开始。
+            case MotionEvent.ACTION_UP:
+                isTouch = true;
+                countTimerView.start();
+                break;
+            //否则其他动作计时取消
+            default:
+                isTouch = false;
+                countTimerView.cancel();
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        countTimerView.cancel();
+    }
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        timeStart();
+    }
+
+    public class CountTimer extends CountDownTimer {
+        private Context context;
+
+        /**
+         * 参数 millisInFuture       倒计时总时间（如60S，120s等）
+         * 参数 countDownInterval    渐变时间（每次倒计1s）
+         */
+        public CountTimer(long millisInFuture, long countDownInterval,Context context) {
+            super(millisInFuture, countDownInterval);
+            this.context=context;
+        }
+        // 计时完毕时触发
+        @Override
+        public void onFinish() {
+            if (isTouch) {
+                isTouch = false;
+                Intent intent = new Intent(TwoActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        }
+        // 计时过程显示
+        @Override
+        public void onTick(long millisUntilFinished) {
+        }
     }
 }

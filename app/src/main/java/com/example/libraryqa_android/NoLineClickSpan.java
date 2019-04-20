@@ -4,6 +4,10 @@ import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
+/**
+ * 去除可点击文字的下划线
+ */
+
 public class NoLineClickSpan extends ClickableSpan {
     public NoLineClickSpan() {
         super();
