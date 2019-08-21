@@ -15,12 +15,12 @@ import okhttp3.Response;
 public class HttpPost {
     String gAsw;
 
-    public void hPost(String ask, final Info info) {
+    public void hPost(String ask, final Info info, String url) {
         //传递json格式
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         String requestBody = "{\"question\": \" " + ask + "\"}";
         Request request = new Request.Builder()
-                .url("http://39.108.80.74:8888?target=all")
+                .url("http://39.108.80.74:8888/?target=graph_qa")
                 .post(RequestBody.create(mediaType, requestBody))
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();

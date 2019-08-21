@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -71,6 +72,8 @@ public class TwoActivity extends Activity {
     private GifImageView gifImageView;
     //二维码中间logo
     private Bitmap logo;
+    private EditText et;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,10 @@ public class TwoActivity extends Activity {
         mLv_chat.setSelection(dataList.size() - 1);
         //语音问候
         readAsw(greet);
+
+//        et = (EditText)findViewById(R.id.url);
+//        url = et.getText().toString();
+
     }
 
     public void startVoice(View view) {
@@ -153,7 +160,7 @@ public class TwoActivity extends Activity {
                     tvAsk.setText(kgAsk);
                     httpPost = new HttpPost();
                     //向服务器发送post请求
-                    httpPost.hPost(kgAsk, info);
+                    httpPost.hPost(kgAsk, info, url);
                     //等待服务器返回结果
                     while (info.getGraph_answer() == null) {
                         try {
@@ -166,21 +173,24 @@ public class TwoActivity extends Activity {
                     //获取服务器返回的graph_answer
                     String asw = info.getGraph_answer();
                     if(asw.length() == 0){
-                        //graph_answer为空，返回search_answer
-                        asw += "您说的小图不太明白，您是想问以下问题吗？";
-                        searchAnswers = info.getSearch_answer();
-                        int id = -1;
-                        LvBean aswBean = new LvBean(asw, -1, id);
-                        LvBean searchBean1  = new LvBean(searchAnswers.get(0).getQuestion(), 2, -1);
-                        LvBean searchBean2  = new LvBean(searchAnswers.get(1).getQuestion(), 3, -1);
-                        LvBean searchBean3 = new LvBean(searchAnswers.get(2).getQuestion(), 4, -1);
+                        asw += "请您重新提问";
+                        LvBean aswBean = new LvBean(asw, -1, -1);
                         dataList.add(aswBean);
-                        dataList.add(searchBean1);
-                        dataList.add(searchBean2);
-                        dataList.add(searchBean3);
-                        searchAsk1 = new SpannableString(searchAnswers.get(0).getQuestion());
-                        searchAsk2 = new SpannableString(searchAnswers.get(1).getQuestion());
-                        searchAsk3 = new SpannableString(searchAnswers.get(2).getQuestion());
+//                        //graph_answer为空，返回search_answer
+//                        asw += "您说的小图不太明白，您是想问以下问题吗？";
+//                        searchAnswers = info.getSearch_answer();
+//                        int id = -1;
+//                        LvBean aswBean = new LvBean(asw, -1, id);
+//                        LvBean searchBean1  = new LvBean(searchAnswers.get(0).getQuestion(), 2, -1);
+//                        LvBean searchBean2  = new LvBean(searchAnswers.get(1).getQuestion(), 3, -1);
+//                        LvBean searchBean3 = new LvBean(searchAnswers.get(2).getQuestion(), 4, -1);
+//                        dataList.add(aswBean);
+//                        dataList.add(searchBean1);
+//                        dataList.add(searchBean2);
+//                        dataList.add(searchBean3);
+//                        searchAsk1 = new SpannableString(searchAnswers.get(0).getQuestion());
+//                        searchAsk2 = new SpannableString(searchAnswers.get(1).getQuestion());
+//                        searchAsk3 = new SpannableString(searchAnswers.get(2).getQuestion());
                     }
                     else {
                         LvBean aswBean = new LvBean(asw, -1, -1);

@@ -25,6 +25,13 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
     useLibrary 'org.apache.http.legacy'
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                // 此处指定生成的apk文件名
+                outputFileName = "Libot.apk"
+            }
+    }
 
 }
 
