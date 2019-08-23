@@ -18,12 +18,12 @@ public class MainActivity extends Activity {
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE;
         getWindow().setAttributes(params);
-        //横屏显示
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        if(NavUtils.getParentActivityName(MainActivity.this)!=null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+//        //横屏显示
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        if(NavUtils.getParentActivityName(MainActivity.this)!=null) {
+//            getActionBar().setDisplayHomeAsUpEnabled(true);
+//        }
         setContentView(R.layout.activity_main);
         //设置波纹
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);

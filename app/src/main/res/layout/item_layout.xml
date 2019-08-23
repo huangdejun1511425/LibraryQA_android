@@ -55,10 +55,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:text="answer"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="#000"/>
         <TextView
             android:id="@+id/tv_search1"
@@ -66,12 +66,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:text="search1"
             android:visibility="gone"
             android:textSize="12sp"
             android:clickable="true"
+            android:textStyle="bold"
             android:textColor="#000"/>
         <TextView
             android:id="@+id/tv_search2"
@@ -79,13 +80,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:layout_marginTop="5dp"
             android:text="search2"
             android:visibility="gone"
             android:clickable="true"
             android:textSize="12sp"
+            android:textStyle="bold"
             android:textColor="#000"/>
         <TextView
             android:id="@+id/tv_search3"
@@ -93,13 +95,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:layout_marginTop="5dp"
             android:text="search3"
             android:visibility="gone"
             android:clickable="true"
             android:textSize="12sp"
+            android:textStyle="bold"
             android:textColor="#000"/>
 
         <!--<ImageView-->

@@ -20,7 +20,7 @@ public class HttpPost {
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         String requestBody = "{\"question\": \" " + ask + "\"}";
         Request request = new Request.Builder()
-                .url("http://39.108.80.74:8888/?target=graph_qa")
+                .url("http://" + url + ":8888/?target=all")
                 .post(RequestBody.create(mediaType, requestBody))
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient();

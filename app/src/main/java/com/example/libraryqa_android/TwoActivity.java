@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,6 +73,7 @@ public class TwoActivity extends Activity {
     private GifImageView gifImageView;
     //二维码中间logo
     private Bitmap logo;
+    private Button bt;
     private EditText et;
     String url;
 
@@ -82,12 +84,12 @@ public class TwoActivity extends Activity {
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE;
         getWindow().setAttributes(params);
-        //固定横屏显示
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        if(NavUtils.getParentActivityName(TwoActivity.this)!=null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+//        //固定横屏显示
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        if(NavUtils.getParentActivityName(TwoActivity.this)!=null) {
+//            getActionBar().setDisplayHomeAsUpEnabled(true);
+//        }
         setContentView(R.layout.two_activity);
         //创建讯飞语音实例
         initVoice();
@@ -131,9 +133,17 @@ public class TwoActivity extends Activity {
         mLv_chat.setSelection(dataList.size() - 1);
         //语音问候
         readAsw(greet);
+        bt = (Button)findViewById(R.id.bt);
+        et = (EditText)findViewById(R.id.url);
+        bt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //获取EditText控件ledShow的输入内容，并用ledShow显示
+                url = et.getText().toString();
+                bt.setVisibility(View.GONE);
+                et.setVisibility(View.GONE);
+            }
+        });
 
-//        et = (EditText)findViewById(R.id.url);
-//        url = et.getText().toString();
 
     }
 
@@ -173,24 +183,24 @@ public class TwoActivity extends Activity {
                     //获取服务器返回的graph_answer
                     String asw = info.getGraph_answer();
                     if(asw.length() == 0){
-                        asw += "请您重新提问";
-                        LvBean aswBean = new LvBean(asw, -1, -1);
-                        dataList.add(aswBean);
-//                        //graph_answer为空，返回search_answer
-//                        asw += "您说的小图不太明白，您是想问以下问题吗？";
-//                        searchAnswers = info.getSearch_answer();
-//                        int id = -1;
-//                        LvBean aswBean = new LvBean(asw, -1, id);
-//                        LvBean searchBean1  = new LvBean(searchAnswers.get(0).getQuestion(), 2, -1);
-//                        LvBean searchBean2  = new LvBean(searchAnswers.get(1).getQuestion(), 3, -1);
-//                        LvBean searchBean3 = new LvBean(searchAnswers.get(2).getQuestion(), 4, -1);
+//                        asw += "您的问题难倒我了，下面的问题是否感兴趣？";
+//                        LvBean aswBean = new LvBean(asw, -1, -1);
 //                        dataList.add(aswBean);
-//                        dataList.add(searchBean1);
-//                        dataList.add(searchBean2);
-//                        dataList.add(searchBean3);
-//                        searchAsk1 = new SpannableString(searchAnswers.get(0).getQuestion());
-//                        searchAsk2 = new SpannableString(searchAnswers.get(1).getQuestion());
-//                        searchAsk3 = new SpannableString(searchAnswers.get(2).getQuestion());
+                        //graph_answer为空，返回search_answer
+                        asw += "您的问题难倒我了" + "\n" + "下面的问题点一点有惊喜哦！";
+                        searchAnswers = info.getSearch_answer();
+                        int id = -1;
+                        LvBean aswBean = new LvBean(asw, -1, id);
+                        LvBean searchBean1  = new LvBean(searchAnswers.get(0).getQuestion(), 2, -1);
+                        LvBean searchBean2  = new LvBean(searchAnswers.get(1).getQuestion(), 3, -1);
+                        LvBean searchBean3 = new LvBean(searchAnswers.get(2).getQuestion(), 4, -1);
+                        dataList.add(aswBean);
+                        dataList.add(searchBean1);
+                        dataList.add(searchBean2);
+                        dataList.add(searchBean3);
+                        searchAsk1 = new SpannableString(searchAnswers.get(0).getQuestion());
+                        searchAsk2 = new SpannableString(searchAnswers.get(1).getQuestion());
+                        searchAsk3 = new SpannableString(searchAnswers.get(2).getQuestion());
                     }
                     else {
                         LvBean aswBean = new LvBean(asw, -1, -1);
