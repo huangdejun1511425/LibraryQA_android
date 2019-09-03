@@ -124,7 +124,7 @@ public class TwoActivity extends Activity {
         mLv_chat.setAdapter(mAdapter);
         //设置问候语
         String greet = "您好，有什么能为您服务？";
-        LvBean greetBean = new LvBean(greet, -1, -1);
+        LvBean greetBean = new LvBean(greet, 0, -1);
         //问候语加入会话列表
         dataList.add(greetBean);
         //刷新lv
@@ -283,7 +283,7 @@ public class TwoActivity extends Activity {
                 vh = new ViewHolder();
                 vh.tv_ask = (TextView) convertView.findViewById(R.id.tv_ask);
                 vh.ll_asw = (LinearLayout) convertView.findViewById(R.id.ll_asw);
-                vh.tv_asw = (TextView) convertView.findViewById(R.id.tv_asw);
+                vh.tv_asw = (ScrollTextView) convertView.findViewById(R.id.tv_asw);
                 vh.ll_ask = (LinearLayout) convertView.findViewById(R.id.ll_ask);
                 vh.tv_search1 = (TextView) convertView.findViewById(R.id.tv_search1);
                 vh.tv_search2 = (TextView) convertView.findViewById(R.id.tv_search2);
@@ -301,13 +301,18 @@ public class TwoActivity extends Activity {
             if(bean.isAsk == 0){
                 //vh.ll_greet.setVisibility(View.VISIBLE);
                 vh.ll_ask.setVisibility(View.GONE);
-                vh.ll_asw.setVisibility(View.GONE);
+                vh.ll_asw.setVisibility(View.VISIBLE);
+                vh.tv_asw.initScrollTextView(getWindowManager(), bean.text, 0);
+                vh.tv_asw.setText(bean.text);
+                vh.tv_asw.starScroll();
                 //vh.tv_greet.setText(bean.text);
             }
             if(bean.isAsk == -1){
                 vh.ll_asw.setVisibility(View.VISIBLE);
                 vh.ll_ask.setVisibility(View.GONE);
-                vh.tv_asw.setText(bean.text);
+                vh.tv_asw.initScrollTextView(getWindowManager(), bean.text, 6);
+                vh.tv_asw.setText("");
+                vh.tv_asw.starScroll();
             }
             if(bean.isAsk == 2) {
                 vh.ll_asw.setVisibility(View.VISIBLE);

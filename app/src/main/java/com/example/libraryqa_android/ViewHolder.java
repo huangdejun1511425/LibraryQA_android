@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class ViewHolder {
     TextView tv_ask;
     LinearLayout ll_asw;
-    TextView tv_asw;
+    ScrollTextView tv_asw;
     TextView tv_greet;
     LinearLayout ll_greet;
     LinearLayout ll_ask;
